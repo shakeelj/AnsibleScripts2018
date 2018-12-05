@@ -1,0 +1,52 @@
+--- # NFS Server PLaybook
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  vars:
+    distribution: Redhat
+    nfsutils_pkg: nfs-utils
+    nfslibs_pkg: nfs-utils
+    nfsserver_service: nfs-server
+    nfslock_service: nfs_lock
+    nfsmap_service: nfs-idmap
+    rpcbind_service: rpcbind
+    export_path: /var/share
+  tasks: 
+   - name: Install the NFS Server and Utilities
+     yum: pkg=nfs-utils state=latest
+   - name: Install the NFS server Libraries
+     yum: pkg=nfs-utils state=latest
+   - name: Copy the export file to remote server
+     copy: src=files/exports.template dest=/etc/exports owner=root group=root mode=644
+   - name: Start the RPC Bind Service
+     service: name=rpcbind state=started
+   - name: Start the NFS service service
+     service: name=nfs-server state=started
+   - name: Start the file lock service
+     service: name=nfs-lock state=started
+   - name: Start the NFS map service
+     service: name=nfs-idmap state=started
+   - name: Install the NFS Client and Utilities
+     yum: pkg=nfs-utils state=latest
+     delegate_to: 127.0.0.1
+   - name: Install the NFS Client Libraries
+     yum: pkg=nfs-utils state=latest
+     delegate_to: 127.0.0.1
+   - name: Start service for Client RPC
+     service: name=rpcbind state=started
+     delegate_to: 127.0.0.1
+   - name: Start the NFS Client File Lock Service
+     service:  name=nfs-lock state=started
+     delegate_to: 127.0.0.1
+   - name: Create Client Mount Directory
+     file: path=/mnt/remote state=directory mode=755
+     delegate_to: 127.0.0.1
+   - name: Mount the filesystem on the client from the NFS server
+     shell: mount -t nfs shakeelj6.mylabserver.com:/var/share /mnt/remote
+#     mount: name=/mnt/remote src=/var/share/ fstype=nfs state=present     
+     register: result
+     delegate_to: 127.0.0.1
+   - name: Show the client mount result
+     debug: var=result

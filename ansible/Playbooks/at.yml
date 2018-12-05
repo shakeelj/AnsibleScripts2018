@@ -1,0 +1,9 @@
+--- # Example of AT Module
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  tasks:
+   - name: Example of a future command with the AT module
+     at: command="ls /var/log > /home/ansible/at1.log" state=absent unique=true

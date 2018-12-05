@@ -1,0 +1,23 @@
+- webservers
+- ansible
+- sudo rights
+
+- data/time stamp for when the playbook start
+
+- install the apache webserver
+- start the web service
+
+
+- verify that the web service is running
+
+
+- install client software
+  -telnet
+  -lynx
+
+- log all the packages install on the system
+
+- date/time stamp for when the playbook ends
+
+
+

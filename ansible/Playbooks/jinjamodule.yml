@@ -1,0 +1,13 @@
+--- # Testing the J2 Template Module
+- hosts: apacheweb,debian
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  vars:
+   userName: ansible
+   userPassword: P@ssword123
+   connectionType: SFTP
+  tasks:
+   - name: Install the configuration file customized for the system
+     template: src=/home/ansible/Playbooks/files/test.conf.j2 dest=/home/ansible/tests.conf owner=ansible group=ansible mode=750

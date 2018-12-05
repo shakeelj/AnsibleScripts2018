@@ -1,0 +1,14 @@
+--- # Web Playbook
+- hosts: apacheweb
+  user: ansible
+  sudo : yes
+  connection: ssh
+  gather_facts: yes
+  vars_files:
+    - variables/variables.yml
+  tasks:
+    - include: packages/packages.yml
+    - include: commands/commands.yml
+    - include: handler/handler.yml
+
+

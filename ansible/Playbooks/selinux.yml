@@ -1,0 +1,10 @@
+--- # Example of SELINUX Script
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  tasks:
+    - name: Change SElinux Configuration to Permissive
+      selinux: policy=targeted state=permissive
+

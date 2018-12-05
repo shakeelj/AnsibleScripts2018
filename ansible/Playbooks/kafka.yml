@@ -1,0 +1,13 @@
+--- # This is my YAML Playbook for Ansible
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: on
+  tasks:
+  - name: Extract Archive
+    command: tar -xzvf kafka_2.11-2.0.0.tgz
+  - name: Moving tgz to OPT directory
+    command: cp -r  kafka_2.11-2.0.0 /opt
+  - name: Starting zookeeper
+    command: sh /opt/kafka_2.11-2.0.0/bin/./zookeeper-server-start.sh ../config/zookeeper.properties &

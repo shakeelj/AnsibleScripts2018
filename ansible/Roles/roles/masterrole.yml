@@ -1,0 +1,20 @@
+--- # Master role file for TESTROLE
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  pre_tasks:
+  - name: data/time stamp for when the playbook starts
+    command: /usr/bin/date
+    register: timestamp_start
+  - debug: var=timestamp_start
+  roles:
+  - testrole
+  post_tasks:
+  - name: data/time stamp for when the playbook ends
+    command: /usr/bin/date
+    register: timestamp_end
+  - debug: var=timestamp_end
+
+  
+

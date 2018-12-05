@@ -1,0 +1,11 @@
+--- # Example of ACL module
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: no
+  tasks:
+    - name: Get ACL information on the /etc/test.acl.txt remote file
+      acl: name=/etc/test.acl.txt entity=ansible etype=user  state=absent
+      register: aclinfo
+    - debug: msg={{ aclinfo }}

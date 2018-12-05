@@ -1,0 +1,13 @@
+--- # Master Playbook for Webservers
+- hosts: localhost
+  user: ansible
+  sudo: yes
+  connection: ssh
+  pre_tasks:
+  - name: When did the role start
+    raw: date > /home/ansible/startofrole254.log
+  roles:
+  - nfs.client
+  post_tasks:
+  - name: When did the role end
+    raw: date > /home/ansible/stopofrole254.log

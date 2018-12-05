@@ -1,0 +1,9 @@
+--- # Example Fetch Module
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: no
+  tasks:
+   - name: Copy remote host file to control server
+     fetch: src=/etc/hosts dest=/home/ansible/test

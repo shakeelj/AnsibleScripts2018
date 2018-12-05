@@ -1,0 +1,11 @@
+--- # Master Playbook demonstarting the delegateto command
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  pre_tasks:
+  - name: Ping the application server
+    raw: ping -c 4 shakeelj6 > /home/ansible/ping.out
+    delegate_to: 127.0.0.1
+  roles:
+  - webservers

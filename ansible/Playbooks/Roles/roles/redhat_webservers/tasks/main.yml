@@ -1,0 +1,13 @@
+- name: Install (RedHat/ Centos)apache Web Server
+  yum: pkg={{ redhat_apache }} state=latest
+  when: "ansible_os_family == 'RedHat'"
+- shell: systemctl status httpd
+  register: result
+  until: result.stdout.find("active (running)") != -1
+  retries: 5
+  delay: 5
+- debug: var=result
+- name: Need to install telnet
+  debug:
+  when: "ansible_os_family == 'Redhat'"
+  notify: InstallTelnet

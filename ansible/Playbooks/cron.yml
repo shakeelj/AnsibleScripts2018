@@ -1,0 +1,9 @@
+--- # Cron Example Module
+- hosts: apacheweb
+  user: ansible
+  connection: ssh
+  gather_facts: no
+  tasks:
+    - name: Add a CRON JOB to the Ansible User
+      cron: name="list files" state=absent
+

@@ -1,0 +1,11 @@
+--- # Command Module Example
+- hosts: appserver
+  user: ansible
+  sudo: yes 
+  connection: ssh
+  gather_facts: no
+  tasks:
+    - name: Check for Python Packages
+      command: /home/ansible/testing/test.sh
+      args:
+        chdir: /home/ansible/testing

@@ -1,0 +1,12 @@
+--- # MYSQL_DB MODULE DEMO
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  tasks:
+   - name: Install the Python MYSQL Support Libraries
+     yum: pkg=MySQL-python state=latest
+   - name: Create a New Test DB called MyNewDB
+     mysql_db: name=MyNewDB state=present login_user=root login_password=p@ssword123
+

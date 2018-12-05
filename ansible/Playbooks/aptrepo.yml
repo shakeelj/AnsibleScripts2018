@@ -1,0 +1,13 @@
+--- # Example of Aptrepo/ALSO apt_key example
+- hosts: appserver
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  tasks:
+    - name: Install a dependency needed for apt_repository
+      apt: pkg=python-apt state=latest
+    - name: Add the Key
+      apt_key: url=https://dl-ssl.google.com/linux/linux_signing_key.pub state=present
+    - name: Add the Google Repo for Ubuntu
+      apt_repository: repo='deb http://dl.google.com/linux/deb/ stable main non-free' state=present

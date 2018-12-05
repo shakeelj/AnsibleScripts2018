@@ -1,0 +1,9 @@
+--- # Install httpd
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  tasks:
+   - name: Install httpd using yum
+     action: yum name=lynx state=installed

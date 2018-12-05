@@ -1,0 +1,9 @@
+--- # Example of GetUrl Module
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  tasks:
+    - name: Get and download the INI file from the Web Server
+      get_url: url=http://shakeelj6.mylabserver.com/php.info dest=/home/ansible/php.info mode=0777

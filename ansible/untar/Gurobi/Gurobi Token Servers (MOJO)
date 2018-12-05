@@ -1,0 +1,20 @@
+6) Gurobi Token Servers ( dr7mojsvac1.dev.ti.census.gov / dr7mojsvac2.dev.ti.census.gov ):
+	sudo su - root
+	user and group dasgrblicense dasgrblicensegrp
+	chown rockit:amojsg_rockit /apps /data
+	sudo su - rockit
+	--cd /apps && curl --insecure -u$USER:$PASSWORD -O https://artifactory.ti.census.gov:8443/artifactory/CB-Mojo-$ENVIRONMENT/Software/gurobi750.tar.gz
+	tar -xvzf gurobi750.tar.gz
+	echo "export GUROBI_HOME=/apps/gurobi750/linux64/" >> ~/.bash_profile
+	echo "export PATH=\$PATH:\$GUROBI_HOME\bin" >> ~/.bash_profile
+	source ~/.bash_profile
+	rm -rf gurobi750.tar.gz
+	mkdir /apps/gurobi_ts_license
+	cd /apps/gurobi_ts_license
+	--curl --insecure -u$USER:$PASSWORD -O https://artifactory.ti.census.gov:8443/artifactory/CB-Mojo-$ENVIRONMENT/Licenses/gurobi_<hostname>.lic
+	mv gurobi_<hostname>.lic gurobi_token_server.lic
+	mkdir /apps/gurobi_usage_logs
+	sed -i 's/USAGELOG=.*/USAGELOG=/apps/gurobi_usage_logs/gurobi_usage.log/g' /apps/gurobi_ts_license/gurobi_token_server.lic
+	echo "VERBOSE=1">>/apps/gurobi_ts_license/gurobi_token_server.lic
+	echo "export GRB_LICENSE_FILE=/apps/gurobi_ts_license/gurobi_token_server.lic" >> ~/.bash_profile && source ~/.bash_profile
+	grb_ts

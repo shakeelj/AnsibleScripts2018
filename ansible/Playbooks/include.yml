@@ -1,0 +1,10 @@
+--- # Example of Include Statement
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: no
+  tasks: 
+    - include: plays/packages.yml
+    - name: Verify the telnet package is installed
+      raw: yum list installed | grep telnet > /home/ansible/pkgs.log

@@ -1,0 +1,13 @@
+--- # Master Playbook for Webservers
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  pre_tasks:
+    - name: When did the role start
+      raw: date > /home/ansible/startofrole.log
+  roles:
+    - debian_webservers
+  post_tasks:
+    - name: When did the role stop
+      raw: date > /home/ansible/stopofrole.log

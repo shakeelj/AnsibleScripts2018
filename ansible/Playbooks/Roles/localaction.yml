@@ -1,0 +1,10 @@
+--- # Master playbook demonstrating the delegate to command
+- hosts: apacheweb
+  user: test
+  sudo: yes
+  connection: ssh
+  pre_tasks:
+  - name: Ping the application server
+    local_action: raw ping -c 5 shakeelj6 > /home/test/Playbooks/Roles/roles/ping.out
+  roles:
+  - apacheweb

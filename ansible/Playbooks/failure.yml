@@ -1,0 +1,16 @@
+--- # Error Handling Example
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: no
+  tasks:
+    - name: Execute a command that will fail
+      command: /bin/false
+      ignore_errors: yes
+    - name: Install telnet
+      yum: pkg=telne state=latest
+      ignore_errors: yes
+    - name: Install Lynx
+      yum: pkg=lynx state=latest
+

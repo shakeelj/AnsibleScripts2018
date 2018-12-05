@@ -1,0 +1,113 @@
+---
+  - name: Create user and set directory permissions
+    hosts: gurobi_token_servers
+    gather_facts: no
+    become: true
+    become_user: root
+
+    tasks:
+
+      - name: Ensure dasgrblicensegrp group exists
+        group: 
+          name: dasgrblicensegrp
+          state: exists
+
+      - name: Ensure dasgrblicense user exists
+        user:
+          name: dasgrblicense
+          groups: dasgrblicensegrp
+          append: yes
+          state: present
+ 
+      - name: Ensure dirs /apps and /data exist and set permissions
+        file:
+          path: "{{ item }}"
+          state: directory
+          owner: rockit
+          group: amojsg_rockit
+          mode: 0777
+        with_items:
+          - '/apps'
+          - '/data'
+
+
+  - name: Download and run app
+    hosts: gurobi_token_servers
+    gather_facts: no
+    become: true
+    become_user: rockit
+    vars_files:
+      - ./vars.yml
+
+    tasks:
+
+      - name: Download app
+        get_url:
+          url: "https://artifactory.ti.census.gov:8443/artifactory/CB-Mojoa-{{ env }}/Software/gurobi750.tar.gz"
+          dest: /apps/gurobi750.tar.gz
+          validate_certs: no
+          force_basic_auth: yes
+          url_username: "{{ user }}"
+          url_password: "{{ password }}"
+
+      - name: Extract app from archive
+        unarchive:
+          src: /apps/gurobi750.tar.gz
+          dest: /apps
+
+      - name: Setup bash profile
+        lineinfile:
+          path: ~/.bash_profile
+          state: present
+          line: "{{ item }}"
+        with_items:
+          - 'export GUROBI_HOME=/apps/gurobi750/linux64/'
+          - 'export PATH=$PATH:$GUROBI_HOME/bin'
+          - 'export GRB_LICENSE_FILE=/apps/gurobi_ts_license/gurobi_token_server.lic'
+
+      - name: Remove archive file
+        file:
+          path: /apps/gurobi750.tar.gz
+          state: absent
+
+      - name: Create dird /apps/gurobi_ts_license and /apps/gurobi_usage_logs
+        file:
+          path: "{{ item }}"
+          state: directory
+          mode: 0777
+        with_items:
+          - '/apps/gurobi_ts_license'
+          - '/apps/gurobi_usage_logs'
+
+      - name: Download lic files
+        get_url:
+          url: "https://artifactory.ti.census.gov:8443/artifactory/CB-Mojo-{{ env }}/Licenses/gurobi_{{ inventory_hostname }}.lic"
+          dest: /apps/gurobi_ts_license/gurobi_token_server.lic
+          validate_certs: no
+          force_basic_auth: yes
+          url_username: "{{ user }}"
+          url_password: "{{ password }}"
+
+      - name: Setup Usagelog in lic file
+        replace:
+          path: /apps/gurobi_ts_license/gurobi_token_server.lic
+          regexp: 'USAGELOG=.*$'
+          replace: USAGELOG=/apps/gurobi_usage_logs/gurobi_usage.log
+          backup: yes
+
+      - name: Setup verbose level
+        lineinfile:
+          path: /apps/gurobi_ts_license/gurobi_token_server.lic
+          state: present
+          line: "{{ item }}"
+        with_items:
+          - 'VERBOSE=1'
+
+  - name: Run app (now we reconnect and re-read .bash_profile setting)
+    hosts: gurobi_token_servers
+    gather_facts: no
+    # become: true
+    become_user: rockit
+    tasks:
+      - name: Run grb_ts
+        shell: grb_ts

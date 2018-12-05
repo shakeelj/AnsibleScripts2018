@@ -1,0 +1,9 @@
+--- # Example of RAW Module
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  tasks:
+    - name: Find the system uptime for the 'hosts' above
+      raw: /usr/bin/uptime >> uptime123.log

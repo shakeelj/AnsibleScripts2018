@@ -1,0 +1,8 @@
+--- # Example of Script
+- hosts: aptserver
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: no
+  tasks: 
+  - script: /home/ansible/Playbooks/system_uptime.sh  creates=/home/ansible/uptime.log

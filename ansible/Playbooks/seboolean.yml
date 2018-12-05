@@ -1,0 +1,9 @@
+--- # Example for Boolean Example
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  tasks:
+    - name: Change Boolean for anonymous writes on the Web Server
+      seboolean: name=httpd_anon_write state=no persistent=yes

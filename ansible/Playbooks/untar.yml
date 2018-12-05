@@ -1,0 +1,11 @@
+--- # Example of untar
+- hosts: local
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: yes
+  tasks:
+   - name: untar a file
+     raw: tar xvf /home/ansible/Gurobi.tar.gz
+   - name: copy gurobi to /home/ansible/untar
+     raw: cp -r /home/ansible/Gurobi /home/ansible/untar

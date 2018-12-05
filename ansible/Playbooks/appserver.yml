@@ -1,0 +1,10 @@
+--- # Installing Lynx
+- hosts: appserver
+  vars :
+    author_name: ansible user
+  vars_files:
+  - vars.yml
+  tasks: 
+  -  name: Install Lynx on App Servers
+     yum: pkg=lynx state=installed update_cache=true
+  

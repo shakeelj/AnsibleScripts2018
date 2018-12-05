@@ -1,0 +1,33 @@
+--- # Outline to Playbook Translation
+- hosts: apacheweb
+  user: ansible
+  sudo: yes
+  connection: ssh
+  gather_facts: no
+  tasks: 
+  - name: data/time stamp for when the playbook start
+    raw: /usr/bin/date > /home/ansible/playbook_start.log
+  - name: Install the apache Web Server
+    yum: pkg=httpd state=latest
+  - name: state the web service
+    service: name=httpd state=restarted
+  - name: verify that the web service is running
+    command: systemctl status httpd
+    register: result
+  - debug: var=result
+  - name: install client software - telnet
+    yum: pkg=telnet state=latest
+  - name: install client software - lynx
+    yum: pkg=lynx state=latest
+  - name: log all the packages install on the system
+    raw: yum list installed > /home/ansible/installed.log
+  - name: date/time stamp for when the playbook ends
+    raw: /usr/bin/date > /home/ansible/playbook_end.log
+
+
+
+
+
+
+
+
